@@ -1,0 +1,19 @@
+# Python venv
+.venv/
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Env files
+.env
+
+# OS / editor junk
+.DS_Store
+.vscode/
+.idea/
+
+# Test / tooling caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/

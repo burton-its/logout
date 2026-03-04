@@ -21,25 +21,6 @@ It stores revoked JWT `jti` values in a database and exposes endpoints to:
 - `db.sql` 
 
 
-
-
-
-
-Flask:
-- `FLASK_HOST` (default: `0.0.0.0`)
-- `FLASK_PORT` (default: `5001`)
-- `FLASK_DEBUG` (`true` or `false`, default: `false`)
-
-## Install
-
-```bash
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-```
-
-
-
 ### Run with MySQL
 .venv/bin/python main.py
 ```
@@ -75,3 +56,6 @@ Returns whether the token ID is revoked.
 Deletes rows where `expires_at` is in the past.
 
 
+## UML diagram
+
+![Revoke Architecture Diagram](diag.png)

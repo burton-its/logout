@@ -1,0 +1,49 @@
+@startuml
+title JWT Logout / Revocation Microservice - Sequence
+
+actor User
+participant "Client App" as Client
+participant "Auth Service" as Auth
+participant "API Service" as API
+participant "Revocation Service" as Revoke
+database "MySQL\nrevoked_tokens" as DB
+
+== Login ==
+User -> Client: Submit credentials
+Client -> Auth: POST /auth/login
+Auth -> Auth: Verify password
+Auth -> Auth: Issue JWT (sub, jti, exp)
+Auth --> Client: 200 + JWT
+
+== Normal API Call ==
+User -> Client: Call protected endpoint
+Client -> API: Request + Authorization: Bearer JWT
+API -> API: Verify JWT signature locally (HS256)
+API -> Revoke: POST /introspect (token or jti)
+Revoke -> Revoke: Verify JWT signature (optional if token sent)
+Revoke -> DB: SELECT revoked WHERE jti=? AND expires_at>NOW()
+DB --> Revoke: none found
+Revoke --> API: {active:true}
+API --> Client: 200 OK
+
+== Logout ==
+User -> Client: Click Logout
+Client -> Auth: POST /auth/logout (or directly to Revoke)
+Auth -> Revoke: POST /revoke (token, reason)
+Revoke -> Revoke: Decode token (verify signature, ignore exp)
+Revoke -> DB: INSERT revoked_tokens(jti, sub, expires_at, reason)
+DB --> Revoke: OK
+Revoke --> Auth: 201 revoked
+Auth --> Client: 200 Logged out
+
+== After Logout (token replay attempt) ==
+User -> Client: Call protected endpoint with old JWT
+Client -> API: Request + Authorization: Bearer old JWT
+API -> API: Verify signature locally (still valid)
+API -> Revoke: POST /introspect
+Revoke -> DB: SELECT revoked WHERE jti=? AND expires_at>NOW()
+DB --> Revoke: row found
+Revoke --> API: {active:false, reason:"revoked"}
+API --> Client: 401 Unauthorized
+
+@enduml

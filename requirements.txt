@@ -3,3 +3,8 @@ uvicorn[standard]
 PyJWT
 pymysql
 sqlalchemy
+flask>=3.0.0
+python-jose[cryptography]>=3.3.0
+pydantic>=2.0.0
+bcrypt==3.2.2
+passlib[bcrypt]

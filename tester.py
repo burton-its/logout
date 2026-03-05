@@ -1,7 +1,7 @@
 from jose import jwt
 import uuid, time
 
-secret = "cs361dog"
+secret = "fillmeout"
 alg = "HS256"
 
 payload = {

@@ -6,7 +6,7 @@ from config import FLASK_HOST, FLASK_PORT, FLASK_DEBUG
 app = Flask(__name__)
 app.register_blueprint(revoke_bp)
 
-# Create table if it doesn't exist yet (safe no-op if already created by db.sql)
+# Create table if it doesnt exist yet 
 Base.metadata.create_all(bind=engine)
 
 

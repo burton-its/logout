@@ -2,7 +2,7 @@ import uuid
 from datetime import datetime, timedelta, timezone
 from jose import jwt
 from passlib.context import CryptContext
-from app.core.config import JWT_SECRET, JWT_ALG, ACCESS_TOKEN_EXPIRE_SECONDS
+from config import JWT_SECRET, JWT_ALG, ACCESS_TOKEN_EXPIRE_SECONDS
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -22,7 +22,7 @@ def create_access_token(user_id: int, email: str) -> str:
     payload = {
         "sub":   str(user_id),
         "email": email,
-        "jti":   str(uuid.uuid4()),   # unique token ID — required for revocation
+        "jti":   str(uuid.uuid4()),   # updated here
         "iat":   int(now.timestamp()),
         "exp":   int(exp.timestamp()),
     }
